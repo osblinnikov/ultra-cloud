@@ -2,7 +2,7 @@
 import sys
 import os
 
-from config  import PROJECTS_ROOT_PATH
+from src.config  import PROJECTS_ROOT_PATH
 from src.builder import runGenerator
 
 
