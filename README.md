@@ -2,26 +2,130 @@
 
 Implementation of actors suitable for real-time, embedded and distributed systems
 
-The actors model suppose that every agent within the framework is a dynamic entity which can even create other agents. Parent actors can also serve only composition purpose without handling the actual workload. 
+The actors model suggests that every agent within the framework is a dynamic entity which can even create other agents. Parent actors can also serve only composition purpose without handling the actual workload. 
 
-Ultra-Cloud project implements a restricted actors model. The simpicity, robustness and possibility of the clear remote monitoring of the developed system comes to the fore in real-time, embedded and distributed systems. In this particular usecase the actors model better be simplified to a topology of actors which is very convinient for the system description and monitoring.
+Ultra-Cloud project implements a `restricted actors model`. The simpicity, robustness and possibility of the clear remote monitoring of the developed system comes to the fore in real-time, embedded and distributed systems. In this particular usecases the better to simplify actors model to a predefined topology of actors which is very convenient for the system description and monitoring.
 
-In the topology of actors the concrete agent can send messages to the topology without knowing the destinations of the message. The use of such topology facilitates the code reusability and complexity isolation in the special places called topology descriptions.
+In the topology of actors the concrete agent can send messages to the topology without knowing the destinations of the message. The use of such topology facilitates the code reusability and isolates complexity in the special places.
 
-In Ultra-Cloud project the topology specification is stored in the ucl.yml file but the implementation of this specification for each programming langugage can be automatically generated.
+The topology specification in Ultra-Cloud project is stored in `ucl.yml` file but the implementation of this specification can be automatically generated for each programming langugage.
 
-To enable and facilitate changes in the concrete actor interface Ultra-Cloud project uses basic description of the actor and stores it in the `*.ucl.yml` where `*` is the name of the actor implementation. Basically the `ACTORNAME.ucl.yml` file is a subset of `ucl.yml` specification. The main difference between actor `*.ucl.yml` and topology `ucl.yml` is that developer can't create internal topology in `*.ucl.yml` for the actor. In Ultra-Cloud Project the actor is an atom of the application's internal structure.
+To enable changes in the concrete actor messaging interface Ultra-Cloud project uses basic description of the actor and stores it in the `ACTORNAME.ucl.yml` where `ACTORNAME` is the name of the actor implementation. Basically the `ACTORNAME.ucl.yml` file is a subset of `ucl.yml` specification. The main difference between actor `*.ucl.yml` and topology `ucl.yml` is that developer can't create internal topology in `*.ucl.yml`. In Ultra-Cloud Project the actor is an atom of the application's internal structure.
 
 ucl.yml
 ---
 
-`ucl.yml` file is the cornerstone in the ultra-cloud project. This file keeps the description of C, Java, JavaScript topology internal structure and exported interface. 
+`ucl.yml` file is the cornerstone in the ultra-cloud project. This file keeps the description of topology internal structure and exported interface. 
 
-First of all every topology and module has a **name**. In `ucl.yml` we create a `name` field in the notation of the Url path. E.g. "github.com/osblinnikov/ultra-cloud/cnets/MapBuffer". For C this will generate a structure "com_github_osblinnikov_ultra_cloud_cnets_MapBuffer" and constructor function "com_github_osblinnikov_ultra_cloud_cnets_MapBuffer_create". For Java the actual package name will be translated into "com.github.osblinnikov.ultra_cloud.cnets.MapBuffer".
+The following section going to describe the standard. But for many purposes developer doesn't need to know everything because we are going to make a web-based GUI to help you with construction and modification of this file with the built-in help. 
 
-Let's consider versioning of our module. `ver` field in `ucl.yml` allows us to keep track of versions of the module. But developer should always keep in mind: if the module already used in other projects but there is a need in changing exported interface in the `ucl.yml` it is better to create a different name of the module e.g MapBuffer2 or ImprovedMapBuffer etc. This allows the community members to upgrade their apps and test it again when they will need it or wanted. At the same time it allows users to have different versions of your module in the same application
+    * If you want it to happen then please provide your wishes about GUI in the issue tracker.
 
+
+ucl.yml standard
+---
+
+1. `name`. First of all every topology and module has a **name**. In `ucl.yml` we create a `name` field in the notation of the Url path. E.g. `name:"github.com/osblinnikov/Ultra-Cloud/Dispatcher"`. For C it is translated to a struct "com_github_osblinnikov_ultra_cloud_Dispatcher" with constructor function "com_github_osblinnikov_ultra_cloud_Dispatcher_create". For Java the name will be translated into "com.github.osblinnikov.ultra_cloud.Dispatcher".  For C++ the name will be translated into "com::github::osblinnikov::ultra_cloud::Dispatcher". 
+
+Developer should always keep in mind: if the module already used in other projects and there is a need in changing exported messaging interface it is better to create a copy of module with different name e.g Dispatcher2 or ImprovedDispatcher etc. This allows the community members to upgrade and test their apps when they will need or want it. At the same time it allows users to have different versions of the module simultaneously.
+
+2. `gen` is a list of URL names of the generators which are going to be used with the topology. e.g
+
+    "gen":[
+      "github.com/osblinnikov/ultra-cloud/plugins/java",
+      "github.com/osblinnikov/ultra-cloud/plugins/maven",
+      "github.com/osblinnikov/ultra-cloud/plugins/gradle",
+      "github.com/osblinnikov/ultra-cloud/plugins/c",
+      "github.com/osblinnikov/ultra-cloud/plugins/cmake",
+      "github.com/osblinnikov/ultra-cloud/plugins/snocs"
+    ]
+    
+  * What every developer should remember is that different generators can be incompatible with each other e.g. they can overrite the same directories or files. To check if the generator is compatible with each other you can simply compare their directory structures. E.g. compare `github.com/osblinnikov/ultra-cloud/plugins/c` and `github.com/osblinnikov/ultra-cloud/plugins/java`. Notice that the files will be generated only if they have .tpl counterpart in the generator folder.
+    
+
+3. `emit` and `receive` are lists of the objects like this:
+    
+    "emit":[
+      "emitInteger~int",
+      "emitStructure~github.com/osblinnikov/ultra-cloud/generator/exampleType"
+    ]
+    
+Separator ~ separates `name` and `type`. The `name` field keeps an identificator which is unique for this module. The `type` field keeps a name of the structure which is going to be emitted/received. 
+
+  * Keep in mind that every generator for different programming language expects that we specified the module of this structure in the `depends` field or included it manually in the build automation system files.
+
+4. `depends` is a list which allows us to provide dependencies names. Any different generator in the field `gen` is free to have it's own behaviour of the dependencies inclusion. The main purpose of the `depends` field is to collect ALL dependencies in the SINGLE place.
+
+    "depends":[
+      "superdomain.com/superprojectInC++",
+      "superdomain.com/superprojectInJava"
+    ]
+
+  * Before code generation, make sure that all specified dependencies are installed into the workspace. If some dependencies are not installed then generators MUST skip them from inclusion because different build systems can have different dependencies.
+
+
+The behaviour of the `github.com/osblinnikov/ultra-cloud/plugins/snocs` generator is to specify the dependencies in the SNonsfile (wrapper of SCons) pipeline so the compiler can find and build deps before building the module. The specified dependencies must also provide SNocsfile.
+    
+The behaviour of the `github.com/osblinnikov/ultra-cloud/plugins/maven` generator is to write the dependencies into pom.xml file with the hope that this module will be available in the build system.
+
+5. `args` is a list of the objects like:  
+
+    "args":[
+      "fakeArgument~int",
+      "initialStructureArray~github.com/osblinnikov/ultra-cloud/generator/exampleType"
+    ]
+  
+Separator ~ separates `name` and `type`. The `name` field keeps an identificator which is unique for this module. The `type` field keeps a name of the structure which is going to be received.
+  
+  * Keep in mind that every generator for different programming language expects that we specified the module of this structure in the `depends` field or included it manually in the build automation system files.
+  
+6. `props` field is a list of the objects like `args`. But there is one key difference with the specification of arrays - you MUST provide "size" attribute along with the type: 
+
+    "props":[
+      "fakePropertyArray~int[]~10",
+      "fakePropertyArrayWithSizeFromArguments~int[]~fakeArgument"
+    ]
+  
+7. `actors` field is a list of the actors objects like: 
+
+    "actors":[{
+      "name":"actor0",
+      "type":"github.com/osblinnikov/ultra-cloud/generator/exampleActor",
+      "args":[
+        "1000L", /*timeout_milisec*/ 
+        "fakePropertyArray" /*buffers*/ 
+      }],
+      "parallel":"fakeArgument", /*[optional] count of actor instances which will work in parallel*/
+      "dispatchEvery":"1000L", /*[optional] if actor work+sleep more than the specified miliseconds then the dispatcher must launch it again*/
+      "emit":["buffer0", "buffer1"], /*sends the emitted data directly into the specified buffers*/
+      "receive":["buffer2", "buffer3", "export~receiveInteger"] /*receives the emitted data directly from the specified buffers or exported connectors, the exporting of connectors allows Ultra-Cloud to build heirarchies of the actors topologies*/
+    }]
+
+8. `buffers` field is another cornerstone of the Ultra-Cloud project. The main feature of the buffers is that they always sit in the middle between the actors. 
+ 
+New types of buffers can be created by anyone who need it. For example one would implement a buffer for the connection to the specifed WebSocket server. Another wants to convert the developed topology into the distributed application with proprietary network messaging.
+
+Buffer must follow to the programming guidelines and interfaces of Ultra-Cloud project: BufferInterface and NetworkBufferInterface.
+
+Developement of new buffer type (BufferInterface)
+---
+
+
+Development of new network buffer type (NetworkBufferInterface)
+---
+
+Stand-alone application can be easily installed across the cluster thus automaticaly becomes Distributed.
+The applications can (and will) be exactly the same everywhere in the cluster if you are using the standard Ultra-cloud Dispatcher. The only thing that differs is the ip-address:port candidates dynamically assigned to the client during STUN/TURN requests. During the startup of applications the Dispatcher will connect to the predefined master WebSocket server (which for example can be a Haproxy with fallback strategy to all the cluster computers). After that application will receive long-polling modifications to the local topology using diffs. These diffs affect Dispatcher - stop some actors and establish more network connections instead of these actors. 
+
+Every Dispatcher monitors the current connection status to the master and distributed peers. In case the peers will disappear - dispatcher immediatelly starts it's local copy of the actor and notifies the master node about the lost peer. Master node can start looking for the solution and orchestrate other peers. Also master peer will send report about the problem and the new network solution.
+
+  * Keep in mind that the local state stored in the faulty peer is lost! Usually it is the worst problem which distributed systems can suffer. The Ultra-Cloud solution for this are two folded:
+  
+      1. Try to keep actors state-less. The smallest number of actors will store the state - the better
+      2. Configure master node to have actors replicas. This will duplicate traffic across the network, but also provides the only way to sustain the sudden shutdown.
+
+  
 *.ucl.yml
 ---
 
-`*.ucl.yml` is a subset of the `ucl.yml` which disallows usage of `topology` key.
+`*.ucl.yml` is a subset of the `ucl.yml` which disallows usage of `actors` and `buffers` keys.
