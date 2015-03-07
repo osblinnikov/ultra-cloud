@@ -1,0 +1,115 @@
+                     The Ultra-Cloud Project
+
+The Ultra-Cloud Project is a collaborative software development effort
+aimed at creating a robust, commercial-grade, featureful, and freely-available
+source code implementation of the real-time distributed computing . The project is jointly 
+managed by a group of volunteers located around the world, using the Internet
+and the Web to communicate, plan, and develop the project and its related 
+documentation.
+
+============================================================================
+
+How to become involved in the Ultra-cloud project
+
+There are several levels of contributing. If you just want to send
+in an occasional suggestion/fix, then you can just use the bug reporting
+form at <https://github.com/osblinnikov/ultra-cloud/issues>. 
+There's a lot of information about the development process 
+to be found at <https://github.com/osblinnikov/ultra-cloud/issues>.
+
+If you'd like to become an active contributor to the Ultra-cloud project (the
+group of volunteers who vote on changes to the distributed server), then
+you need to start by watching project.
+We recommend reading the list of current and resolved issues for a while 
+before trying to jump in to development.
+
+The Utltra-cloud project is a meritocracy -- the more work you have done, the more
+you are allowed to do. The group founders set the original rules, but
+they can be changed by vote of the active members.
+
+Changes to the code are proposed in a form of pull requests and usually voted on by active
+members -- three +1 (yes votes) and no -1 (no votes, or vetoes) are needed
+to commit a code change during a release cycle; docs are usually committed
+first and then changed as needed, with conflicts resolved by majority vote.
+
+We discuss new features to add, bug fixes, user problems, developments
+in the web server community, release dates, etc. The actual code development
+takes place on the developers' local machines, with proposed changes
+communicated using a pull requests, and committed to the source repository by one of the core
+developers.  Anyone on the watching list can vote on a
+particular issue, but we only count those made by active members or people
+who are known to be experts on that part of the project. Vetoes must be
+accompanied by a convincing explanation.
+
+New members of the Ultra-Cloud Group are added when a frequent contributor is
+nominated by one member and unanimously approved by the voting members.
+In most cases, this "new" member has been actively contributing to the
+group's work for over six months, so it's an easy decision.
+
+The above describes our past and current guidelines,
+which will probably change over time as the membership of the group
+changes and our development/coordination tools improve.
+
+ ============================================================================
+
+The Apache Software Foundation (www.apache.org)
+
+The Apache Software Foundation exists to provide organizational, legal,
+and financial support for the Apache open-source software projects.
+Founded in June 1999 by the Apache Group, the Foundation has been
+incorporated as a membership-based, not-for-profit corporation in order
+to ensure that the Apache projects continue to exist beyond the participation
+of individual volunteers, to enable contributions of intellectual property
+and funds on a sound basis, and to provide a vehicle for limiting legal
+exposure while participating in open-source software projects. 
+
+You are invited to participate in The Apache Software Foundation. We welcome
+contributions in many forms. Our membership consists of those individuals
+who have demonstrated a commitment to collaborative open-source software
+development through sustained participation and contributions within the
+Foundation's projects. Many people and companies have contributed towards
+the success of the Apache projects. 
+
+ ============================================================================
+
+Why The Utlra-Cloud project Is Free
+
+The Utlra-Cloud project exists to provide a robust and commercial-grade reference
+implementation of actors framework for Real-time computations. It must remain a platform upon which
+individuals and institutions can build reliable systems, both for
+experimental purposes and for mission-critical purposes. We believe the
+tools of real-time computations should be in the hands of everyone, and
+software companies should make their money providing value-added services
+such as specialized modules and support, amongst other things. We realize
+that it is often seen as an economic advantage for one company to "own" a
+market - in the software industry that means to control tightly a
+particular conduit such that all others must pay. This is typically done
+by "owning" the protocols through which companies conduct business, at the
+expense of all those other companies. To the extent that the protocols of
+the Real-time data processing remain "unowned" by a single company, the world will
+remain a level playing field for companies large and small. Thus,
+"ownership" of the protocols must be prevented, and the existence of a
+robust reference implementation of the protocols, available absolutely for
+free to all companies, is a tremendously good thing. 
+
+Furthermore, Utlra-Cloud project is an organic entity; those who benefit from it
+by using it often contribute back to it by providing feature enhancements,
+bug fixes, and support for others in public newsgroups. The amount of
+effort expended by any particular individual is usually fairly light, but
+the resulting product is made very strong. This kind of community can
+only happen with freeware -- when someone pays for software, they usually
+aren't willing to fix its bugs. One can argue, then, that Ultra-Cloud's
+strength comes from the fact that it's free, and if it were made "not
+free" it would suffer tremendously, even if that money were spent on a
+real development team.
+
+We want to see Ultra-Cloud used very widely -- by large companies, small
+companies, research institutions, schools, individuals, in the intranet
+environment, everywhere -- even though this may mean that companies who
+could afford commercial software, and would pay for it without blinking,
+might get a "free ride" by using Ultra-Cloud. We would even be happy if 
+some commercial software companies completely dropped their own
+development plans and used Ultra-Cloud as a base, with the proper attributions
+as described in the LICENSE file.
+
+Thanks for using Ultra-Cloud Project!
