@@ -10,7 +10,7 @@ Ultra-Cloud project implements this `restricted actors model`. In such topology 
 
 The topology specification in Ultra-Cloud project is stored in `ucl.yml` file. The implementation source code can be automatically generated for any programming langugage using [generator](./generator). The use of code-generators  means that the resulting code becomes fully accessable, debuggable and suitable for quick bug-fixes. The framework library doesn't need to carry all the heavy algorithms resulting in smaller footprint and faster program execution.
 
-Ultra-Cloud project generator updates only the blocks of code which are enclosed within `/*[[[ cog ]]]*/` and `/*[[[end checksum=sfsfwert8werntv]]]*/` tags to allow changes in the actor's structure and messaging interface during the developmet. The checksum allows code-generator to detect the manual or incidental changes to the source-code and to notify developer about this. Your own changes to the source code will never be ovverriden without your participation!
+Ultra-Cloud project generator updates only the blocks of code which are enclosed within `/*[[[cog]]]*/` and `/*[[[end]]] (checksum: 28926fd84afa051f0bffc6691b831551) */` tags to allow changes in the actor's structure and messaging interface during the developmet. The checksum allows code-generator to detect the manual or incidental changes to the source-code and to notify developer about this. Your own changes to the source code will never be ovverriden without your participation!
 
 ucl.yml
 ---
