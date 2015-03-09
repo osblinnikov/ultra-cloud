@@ -8,9 +8,9 @@ The simpicity, robustness and possibility of the clear remote monitoring of the 
 
 Ultra-Cloud project implements this `restricted actors model`. In such topology of actors a concrete agent can send messages via its interfaces without knowing the exact destination of the message. Usage of the topology facilitates the code reusability, isolation of complexity and separation of concerns.
 
-The topology specification in Ultra-Cloud project is stored in `ucl.yml` file. The implementation source code can be automatically generated for any programming langugage using [generator](./generator). The use of code-generators  means that resulting code becomes fully debuggable and suitable for quick bug-fixes. The framework library doesn't need to carry all the heavy weight algorithms so the output binaries are smaller in footprint and faster to execute.
+The topology specification in Ultra-Cloud project is stored in `ucl.yml` file. The implementation source code can be automatically generated for any programming langugage using [generator](./generator). The use of code-generators  means that the resulting code becomes fully accessable, debuggable and suitable for quick bug-fixes. The framework library doesn't need to carry all the heavy algorithms resulting in smaller footprint and faster program execution.
 
-To allow changes in the concrete actor messaging interface during the developmet Ultra-Cloud project generator updates only the blocks of code which are enclosed in `/*[[[ cog ]]]*/` and `/*[[[end checksum=sfsfwert8werntv]]]*/` tags. The checksum allows code-generator to detect the changes to the source-code, and notifies developer about this. Your changes to the source code will never be ovverriden without your participation.
+Ultra-Cloud project generator updates only the blocks of code which are enclosed within `/*[[[ cog ]]]*/` and `/*[[[end checksum=sfsfwert8werntv]]]*/` tags to allow changes in the actor's structure and messaging interface during the developmet. The checksum allows code-generator to detect the manual or incidental changes to the source-code and to notify developer about this. Your own changes to the source code will never be ovverriden without your participation!
 
 ucl.yml
 ---
