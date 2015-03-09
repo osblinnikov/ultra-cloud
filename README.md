@@ -4,22 +4,22 @@ Implementation of actors suitable for real-time, embedded and distributed system
 
 The actors model suggests that every agent within the framework is a dynamic entity which communicates preferably only via message passing and can even create new agents. Parent actors can also serve only composition purpose without handling the actual workload. 
 
-The simpicity, robustness and possibility of the clear remote monitoring of the developed system comes to the fore in real-time, embedded and distributed systems. In this particular usecases the better to simplify actors model to a predefined topology of actors which is very convenient for the system description and monitoring. 
+The simpicity, robustness and possibility of the clear remote monitoring of the developed system comes to the fore in real-time, embedded and distributed systems. 
 
-Ultra-Cloud project implements this `restricted actors model`. In such topology of actors a concrete agent can send messages via its interfaces without knowing the exact destinations of the message. Usage of the topology facilitates the code reusability, isolation of complexity and separation of concerns.
+Ultra-Cloud project implements this `restricted actors model`. In such topology of actors a concrete agent can send messages via its interfaces without knowing the exact destination of the message. Usage of the topology facilitates the code reusability, isolation of complexity and separation of concerns.
 
-The topology specification in Ultra-Cloud project is stored in `ucl.yml` file. The implementation source code can be automatically generated for any programming langugage using [generator](./generator)
+The topology specification in Ultra-Cloud project is stored in `ucl.yml` file. The implementation source code can be automatically generated for any programming langugage using [generator](./generator). The use of code-generators  means that resulting code becomes fully debuggable and suitable for quick bug-fixes. The framework library doesn't need to carry all the heavy weight algorithms so the output binaries are smaller in footprint and faster to execute.
 
-To enable changes in the concrete actor messaging interface Ultra-Cloud project uses basic description of the actor and stores it in the `ACTORNAME.ucl.yml` where `ACTORNAME` is the name of the actor implementation. The `ACTORNAME.ucl.yml` file is a subset of `ucl.yml` specification. The main difference between actor `*.ucl.yml` and topology `ucl.yml` is that developer can't create internal topology structure in `*.ucl.yml`. In Ultra-Cloud Project the actor is an atom of the application's internal structure but the topology unifies actors into the single application.
+To allow changes in the concrete actor messaging interface during the developmet Ultra-Cloud project generator updates only the blocks of code which are enclosed in `/*[[[ cog ]]]*/` and `/*[[[end checksum=sfsfwert8werntv]]]*/` tags. The checksum allows code-generator to detect the changes to the source-code, and notifies developer about this. Your changes to the source code will never be ovverriden without your participation.
 
 ucl.yml
 ---
 
-`ucl.yml` file is the cornerstone in the ultra-cloud project. This file keeps the description of topology internal structure and exported interface. 
+`ucl.yml` file is the cornerstone in the ultra-cloud project. This file keeps the description of the application's topology structure and it's exported interfaces. The following section is meant to describe this standard. 
 
-The following section going to describe the standard. But for most cases developers doesn't need to know all the standard because Ultra-Cloud team is going to make a web-based GUI to help you with the construction and modification of this file. 
+In most cases developers doesn't need to know all the standard because Ultra-Cloud team is going to make a web-based GUI to help you with the construction and modification of this file. 
 
-    * If you want it to happen then please provide your wishes about GUI in our issue tracker.
+    * If you want it to happen then please provide your feedback in our issue tracker!
 
 
 ucl.yml standard
