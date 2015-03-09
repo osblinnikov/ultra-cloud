@@ -8,24 +8,38 @@ The simpicity, robustness and possibility of the clear remote monitoring of the 
 
 Ultra-Cloud project implements this `restricted actors model`. In such topology of actors a concrete agent can send messages via its interfaces without knowing the exact destination of the message. Usage of the topology facilitates the code reusability, isolation of complexity and separation of concerns.
 
-The topology specification in Ultra-Cloud project is stored in `ucl.yml` file. The implementation source code can be automatically generated for any programming langugage using [generator](./generator). The use of code-generators  means that the resulting code becomes fully accessable, debuggable and suitable for quick bug-fixes. The framework library doesn't need to carry all the heavy algorithms resulting in smaller footprint and faster program execution.
+The topology specification in Ultra-Cloud project is stored in `ucl.yaml` file. The implementation source code can be automatically generated for any programming langugage using [generator](./generator). The use of code-generators  means that the resulting code becomes fully accessable, debuggable and suitable for quick bug-fixes. The framework library doesn't need to carry all the heavy algorithms resulting in smaller footprint and faster program execution.
 
 Ultra-Cloud project generator updates only the blocks of code which are enclosed within `/*[[[cog]]]*/` and `/*[[[end]]] (checksum: 28926fd84afa051f0bffc6691b831551) */` tags to allow changes in the actor's structure and messaging interface during the developmet. The checksum allows code-generator to detect the manual or incidental changes to the source-code and to notify developer about this. Your own changes to the source code will never be ovverriden without your participation!
 
-ucl.yml
+Stand-alone application can be easily installed across the cluster thus automaticaly becomes distributed.
+The applications will be exactly the same everywhere in the cluster if you are intended to use the standard Ultra-cloud Dispatcher. The only thing that differs from node to node is the ip-address:port candidates dynamically assigned to the client and discovered by STUN/TURN requests. During the startup of the applications Dispatcher will connect to the predefined master WebSocket server (which for example can be a Haproxy with fallback strategy to all the cluster computers). After that application will receive modifications of the local topology using diffs. These diffs affect Dispatcher which stops some actors and establishes more network connections to remote peers instead of stopped actors.
+
+Every Dispatcher monitors the current connection status to the master and distributed peers. In case the peers will disappear - dispatcher immediatelly starts it's local copy of the actor to fill the application with data and at the same time notifies the master node about the lost peer. Master node can start looking for the solution and orchestrate other peers. Also master peer will send report about the problem and the new network solution.
+
+  * Keep in mind that the local state stored in the faulty peer is lost! It is the worst  but common problem which distributed systems can suffer. The Ultra-Cloud solution for this is three folded:
+  
+      1. Try to keep actors state-less. The least number of actors will store the state - the better
+
+      2. Implement char* getState() and void setState(char*) methods for every state-ful actor. These methods will be triggered before migration of the actor to the newly discovered node. Be prepared to have setState() method triggered during actors life. You don't need to set any locks on the state because Dispatcher will never trigger setState simultaneosly with actor execution.
+      
+      3. Configure master node to have actors replicas. This will duplicate traffic across the network, but it can also provide a way to sustain a sudden shutdown. Be prepared to receive data duplicates.
+
+
+ucl.yaml
 ---
 
-`ucl.yml` file is the cornerstone in the ultra-cloud project. This file keeps the description of the application's topology structure and it's exported interfaces. The following section is meant to describe this standard. 
+`ucl.yaml` file is the cornerstone in the ultra-cloud project. This file keeps the description of the application's topology structure and it's exported interfaces. The following section is meant to describe this standard. 
 
 In most cases developers doesn't need to know all the standard because Ultra-Cloud team is going to make a web-based GUI to help you with the construction and modification of this file. 
 
     * If you want it to happen then please provide your feedback in our issue tracker!
 
 
-ucl.yml standard
+ucl.yaml standard
 ---
 
-1. `name`. First of all every topology and module has a **name**. In `ucl.yml` we create a `name` field in the notation of the Url path. E.g. `name:"github.com/osblinnikov/Ultra-Cloud/Dispatcher"`. For C it is translated to a struct "com_github_osblinnikov_ultra_cloud_Dispatcher" with constructor function "com_github_osblinnikov_ultra_cloud_Dispatcher_create". For Java the name will be translated into "com.github.osblinnikov.ultra_cloud.Dispatcher".  For C++ the name will be translated into "com::github::osblinnikov::ultra_cloud::Dispatcher". 
+1. `name`. First of all every topology and module has a **name**. In `ucl.yaml` we create a `name` field in the notation of the Url path. E.g. `name:"github.com/osblinnikov/Ultra-Cloud/Dispatcher"`. For C it is translated to a struct "com_github_osblinnikov_ultra_cloud_Dispatcher" with constructor function "com_github_osblinnikov_ultra_cloud_Dispatcher_create". For Java the name will be translated into "com.github.osblinnikov.ultra_cloud.Dispatcher".  For C++ the name will be translated into "com::github::osblinnikov::ultra_cloud::Dispatcher". 
 
 Developer should always keep in mind: if the module already used in other projects and there is a need in changing exported messaging interface it is better to create a copy of module with different name e.g Dispatcher2 or ImprovedDispatcher etc. This allows the community members to upgrade and test their apps when they will need or want it. At the same time it allows users to have different versions of the module simultaneously.
 
@@ -102,31 +116,13 @@ Separator " " separates `name` and `type`. The `name` field keeps an identificat
       "receive":["buffer2", "buffer3", "export receiveInteger"] /*receives the emitted data directly from the specified buffers or exported connectors, the exporting of connectors allows Ultra-Cloud to build heirarchies of the actors topologies*/
     }]
 
-8. `buffers` field is another cornerstone of the Ultra-Cloud project. The main feature of the buffers is that they always sit in the middle between the actors. 
+8. `buffers` field is another cornerstone of the Ultra-Cloud project. The buffers are always sit in the middle between the actors allowing to send messages. 
  
-New types of buffers can be created by anyone who need it. For example one would implement a buffer for the connection to the specifed WebSocket server. Another wants to convert the developed topology into the distributed application with proprietary network messaging.
+New types of buffers can be created by anyone who need it. For example one would implement a buffer for the connection to the specifed WebSocket server. Another wants to convert the developed topology into the distributed application with proprietary network messaging. But to use the custom buffers in applications developer needs to register them in the BuffersFactory.
 
-Buffer must follow to the programming guidelines and interfaces of Ultra-Cloud project: BufferInterface and NetworkBufferInterface.
+Buffer must follow to the programming guidelines and BufferInterface of Ultra-Cloud project.
 
-Developement of new buffer type (BufferInterface)
+Developement of a new buffer module (BufferInterface)
 ---
 
 
-Development of new network buffer type (NetworkBufferInterface)
----
-
-Stand-alone application can be easily installed across the cluster thus automaticaly becomes distributed.
-The applications can (and will) be exactly the same everywhere in the cluster if you are using the standard Ultra-cloud Dispatcher. The only thing that differs from node to node is the ip-address:port candidates dynamically assigned to the client and discovered by STUN/TURN requests. During the startup of the applications Dispatcher will connect to the predefined master WebSocket server (which for example can be a Haproxy with fallback strategy to all the cluster computers). After that application will receive modifications to the local topology using diffs. These diffs affect Dispatcher which stops some actors and establishes more network connections to remote peers instead of stopped actors.
-
-Every Dispatcher monitors the current connection status to the master and distributed peers. In case the peers will disappear - dispatcher immediatelly starts it's local copy of the actor to fill the application with data and at the same time notifies the master node about the lost peer. Master node can start looking for the solution and orchestrate other peers. Also master peer will send report about the problem and the new network solution.
-
-  * Keep in mind that the local state stored in the faulty peer is lost! Usually it is the worst problem which distributed systems can suffer. The Ultra-Cloud solution for this is two folded:
-  
-      1. Try to keep actors state-less. The least number of actors will store the state - the better
-      2. Configure master node to have actors replicas. This will duplicate traffic across the network, but it can also provide the way to sustain a sudden shutdown.
-
-  
-*.ucl.yml
----
-
-`*.ucl.yml` is a subset of the `ucl.yml` which disallows usage of `actors` and `buffers` keys.

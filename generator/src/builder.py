@@ -1,4 +1,4 @@
-# realpath() with make your script run, even if you symlink it :)
+# realpath() with make your script run, even if you syamlink it :)
 #
 # cmd_folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0]))
 # if cmd_folder not in sys.path:
@@ -70,22 +70,23 @@ def getFilteredSubFolders(folder, filters):
     return res
 
 def getPath(pathSrc):
-    path = pathSrc.split('.')
-    if len(path) < 3:
-        raise Exception("path: \""+pathSrc+"\" is not a full package name")
-    arr = [PROJECTS_ROOT_PATH, path[1] + "." + path[0]]
-    to_delete = [0, 1]
-    for offset, index in enumerate(to_delete):
-        index -= offset
-        del path[index]
-    return '/'.join(arr + path)
+    # path = pathSrc.split('.')
+    # if len(path) < 3:
+    #     raise Exception("path: \""+pathSrc+"\" is not a full package name")
+    # arr = [PROJECTS_ROOT_PATH, path[1] + "." + path[0]]
+    # to_delete = [0, 1]
+    # for offset, index in enumerate(to_delete):
+    #     index -= offset
+    #     del path[index]
+    # return '/'.join(arr + path)
+    return pathSrc
 
 
 def generateMissedFiles(topology_dir, generator_dir, classPath, extra_args):
     classPathList = classPath.split('.')
     fullName_ = '_'.join(classPathList)
     className = classPathList[-1]
-    json_file_to_read = join(topology_dir, "ucl.yml")
+    json_file_to_read = join(topology_dir, "ucl.yaml")
     for root, dirs, files in os.walk(generator_dir):
         for fileName in files:
             file = os.path.join(root,fileName)
@@ -133,21 +134,24 @@ def generateMissedFiles(topology_dir, generator_dir, classPath, extra_args):
 
 
 def runGenerator(firstRealArgI, argv, topology_dir):
-    Types = []
-    extra_args = getArgs(firstRealArgI, argv, Types)
-    read_data = readJson(join(topology_dir,"ucl.yml"))
-    print(getPath(read_data["type"]))
-    Types = getFilteredSubFolders(getPath(read_data["type"]), Types)
-    # if len(Types) == 0:
-        # print ("No one generator was found")
-        # return
-    for i in range(0, len(Types)):
-        generateMissedFiles(
-            topology_dir,
-            os.path.join(getPath(read_data["type"]), Types[i]),
-            read_data["path"],
-            extra_args
-        )
+    TypesOrig = []
+    extra_args = getArgs(firstRealArgI, argv, TypesOrig)
+    read_data = readyaml(join(topology_dir,"ucl.yaml"))
+    print read_data
+    gens = read_data["gen"]
+    for g in range(0, len(gens)):
+        print(getPath(gens[g]))
+        Types = getFilteredSubFolders(getPath(gens[g]), TypesOrig)
+        # if len(Types) == 0:
+            # print ("No one generator was found")
+            # return
+        for i in range(0, len(Types)):
+            generateMissedFiles(
+                topology_dir,
+                os.path.join(getPath(gens[g]), Types[i]),
+                read_data["name"],
+                extra_args
+            )
 
 
 def checkDir(directory):

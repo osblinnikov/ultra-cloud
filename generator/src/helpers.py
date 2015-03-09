@@ -3,7 +3,7 @@ import re
 import os
 from config import PROJECTS_ROOT_PATH
 
-def readYml(filename):
+def readyaml(filename):
     file_to_read = os.path.join(filename)
     read_data = None
     try:
