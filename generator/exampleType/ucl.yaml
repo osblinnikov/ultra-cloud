@@ -1,4 +1,0 @@
-name: "github.com/osblinnikov/ultra-cloud/generator/exampleType"
-gen: [
-   "github.com/osblinnikov/ultra-cloud/plugins/c"
-]

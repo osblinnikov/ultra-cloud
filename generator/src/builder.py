@@ -11,6 +11,7 @@ import subprocess
 import sys
 from config import PROJECTS_ROOT_PATH
 from attrs import attrs
+from helpers import *
 import json, os
 
 sysPathBcp = list(sys.path+[os.path.dirname(__file__)])
@@ -26,16 +27,15 @@ import mako.lookup
 
 join = os.path.join
 
-
 def tpl(strfile, args):
     mylookup = mako.lookup.TemplateLookup(directories=[
         os.path.abspath(os.getcwd())
     ])
-    tplFromFile = mako.template.Template(filename=strfile, lookup=mylookup, imports=['from src.attrs import attrs'])
+    tplFromFile = mako.template.Template(filename=strfile, lookup=mylookup, imports=['from attrs import attrs'])
     return tplFromFile.render(a=args)
 
 
-def getArgs(firstRealArgI, argv, Types):
+def getArgs(firstRealArgI, argv):
     all_args = []
     compiling_arg = ['-U', '-c']  #-U means unix style line endings
 
@@ -43,13 +43,13 @@ def getArgs(firstRealArgI, argv, Types):
         for i in range(firstRealArgI + 1, len(argv)):
             if argv[i] == '-c':
                 compiling_arg = ['-x']
-            elif argv[i] == '-g':
-                if i + 1 == len(argv) or argv[i + 1].startswith("-"):
-                    raise Exception("expected language type after -lang option")
-                else:
-                    Types.append(argv[i + 1])
-                    i = i + 1
-            elif argv[i - 1] == '-g' or i == 1:
+            # elif argv[i] == '-g':
+            #     if i + 1 == len(argv) or argv[i + 1].startswith("-"):
+            #         raise Exception("expected language type after -lang option")
+            #     else:
+            #         Types.append(argv[i + 1])
+            #         i = i + 1
+            elif i == 1: # argv[i - 1] == '-g' or
                 continue
             else:
                 all_args.append(argv[i])
@@ -61,6 +61,7 @@ def getFilteredSubFolders(folder, filters):
     res = []
     d = []
     for root, dirs, files in os.walk(folder):
+        print dirs
         d = dirs
         break
 
@@ -79,28 +80,29 @@ def getPath(pathSrc):
     #     index -= offset
     #     del path[index]
     # return '/'.join(arr + path)
-    return pathSrc
+    return os.path.join(PROJECTS_ROOT_PATH, pathSrc)
 
 
 def generateMissedFiles(topology_dir, generator_dir, classPath, extra_args):
-    classPathList = classPath.split('.')
-    fullName_ = '_'.join(classPathList)
-    className = classPathList[-1]
+    classPathList = splitClassPath(classPath)
+    className = getClassName(classPath)
+    fullName_ = getFullName_(classPath)
     json_file_to_read = join(topology_dir, "ucl.yaml")
+
     for root, dirs, files in os.walk(generator_dir):
         for fileName in files:
-            file = os.path.join(root,fileName)
-            if (len(fileName)>4 and fileName[-4:] == '.tpl') or not os.path.exists(file+".tpl"):
+            fileP = os.path.join(root,fileName)
+            if (len(fileName)>4 and fileName[-4:] == '.tpl') or not os.path.exists(fileP+".tpl"):
                 continue
 
-            generator_dirLen = (len(generator_dir))+1
-            relativeFilePath =  file[generator_dirLen:]\
+            relativeFilePath =  fileP[(len(generator_dir)+1):]\
                 .replace("_NAME_", className) \
                 .replace("_FULLNAME_", fullName_) \
                 .replace("_FULLNAMEDIR_", os.path.join(*[fullName_, ""])) \
-                .replace("_PATH_", os.path.join(*(classPathList+[""])))\
-                .replace("_UCL_","ucl")
-            absDstFilePath = os.path.join(topology_dir, os.path.split(generator_dir)[1], relativeFilePath)
+                .replace("_PATH_", os.path.join(*(classPathList+[""])))
+            
+            absDstFilePath = os.path.join(topology_dir, relativeFilePath) #os.path.split(generator_dir)[1], 
+
             if not os.path.exists(absDstFilePath):
                 checkDir(absDstFilePath)
 
@@ -109,7 +111,7 @@ def generateMissedFiles(topology_dir, generator_dir, classPath, extra_args):
 
                 f = open(absDstFilePath,'w')#output file
                 f.write(tpl(
-                    file,#input template
+                    fileP,#input template
                     attrs(
                         prefix=json_file_to_read,#required for parser of json file
                         parserPath=generator_dir
@@ -126,7 +128,7 @@ def generateMissedFiles(topology_dir, generator_dir, classPath, extra_args):
                 generator_dir,
                 '-r',#replace in file
                 "-D","configFile="+json_file_to_read, #specify config as global variable
-                "-D","templateFile="+file+'.tpl', #specify config as global variable
+                "-D","templateFile="+fileP+'.tpl', #specify config as global variable
                 absDstFilePath
             ]
             # print args
@@ -134,24 +136,25 @@ def generateMissedFiles(topology_dir, generator_dir, classPath, extra_args):
 
 
 def runGenerator(firstRealArgI, argv, topology_dir):
-    TypesOrig = []
-    extra_args = getArgs(firstRealArgI, argv, TypesOrig)
+    FiltersOrig = []
+    extra_args = getArgs(firstRealArgI, argv)
     read_data = readyaml(join(topology_dir,"ucl.yaml"))
     print read_data
     gens = read_data["gen"]
     for g in range(0, len(gens)):
         print(getPath(gens[g]))
-        Types = getFilteredSubFolders(getPath(gens[g]), TypesOrig)
-        # if len(Types) == 0:
-            # print ("No one generator was found")
-            # return
-        for i in range(0, len(Types)):
-            generateMissedFiles(
-                topology_dir,
-                os.path.join(getPath(gens[g]), Types[i]),
-                read_data["name"],
-                extra_args
-            )
+        # Types = getFilteredSubFolders(getPath(gens[g]), FiltersOrig)
+        # print Types
+        # # if len(Types) == 0:
+        #     # print ("No one generator was found")
+        #     # return
+        # for i in range(0, len(Types)):
+        generateMissedFiles(
+            topology_dir,
+            getPath(gens[g]),
+            read_data["name"],
+            extra_args
+        )
 
 
 def checkDir(directory):

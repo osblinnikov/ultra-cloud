@@ -1,0 +1,5 @@
+name: "github.com/osblinnikov/ultra-cloud/generator/ExampleType"
+gen: [
+   "github.com/osblinnikov/ultra-cloud/plugins/c",
+   "github.com/osblinnikov/ultra-cloud/plugins/snocs"
+]
