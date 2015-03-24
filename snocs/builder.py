@@ -2,6 +2,7 @@ import os.path
 import sys
 from gppqt5 import *
 from gpp import *
+from gpp_cpp11 import *
 from gcc import *
 from mingw import *
 from default import *
@@ -71,7 +72,9 @@ def prepare_args(ARGUMENTS):
     elif args['COMPILER_CODE'] == 'gppqt5':
         args = prepare_gppqt5(args)       
     elif args['COMPILER_CODE'] == 'gpp':
-        args = prepare_gpp(args)        
+        args = prepare_gpp(args)     
+    elif args['COMPILER_CODE'] == 'gpp_cpp11':
+        args = prepare_gpp_cpp11(args)            
     elif args['COMPILER_CODE'] == 'gcc':
         args = prepare_gcc(args)
     elif args['COMPILER_CODE'] == 'mingw':
@@ -132,7 +135,7 @@ def printHelp():
     print "  snocs example compiler=vc9 test"
     print "**********************"
     print "Available options:"
-    print "  compiler={gcc,gpp,gppqt5,mingw,vc9,vc10,vc11,vc11exp}"
+    print "  compiler={gcc,gpp,gpp_cpp11,gppqt5,mingw,vc9,vc10,vc11,vc11exp}"
     print "  configuration={Debug,Release}"
     print "  platform={x86,Win32,x64} # Win32 is an alias to x86"
     print "  verbose=1 # enables scons debug output"

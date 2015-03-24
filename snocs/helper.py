@@ -55,12 +55,21 @@ def enableQtModules(c,env,args,isUiBuildEnabled):
     if len(qtui)>0:
       env.Uic4(qtui)
 
-def defInclDeps(env,args):
+def funcInclDeps(env,args):
   return
 
 def DefaultLibraryConfig(c, env, args):
+  if not c.has_key('inclDeps'):
+    defInclDeps = funcInclDeps
+  else:
+    defInclDeps = c['inclDeps']
+
+  curDir = args['SNOCSCRIPT_PATH']
+
   if not c.has_key("paths"):
     c['paths'] = []
+  c['paths'].append(curDir)
+
   if not c.has_key("defines"):
     c['defines'] = []
   if not c.has_key("inclDepsStatic"):
@@ -86,7 +95,7 @@ def DefaultLibraryConfig(c, env, args):
             relativeFilePath =  fileP[(len(srcFolder)+1):]
             c['sourceFiles'].append(relativeFilePath)
 
-  curDir = args['SNOCSCRIPT_PATH']
+  
   if args['NO_DYNAMIC_BUILD'] != '1':
     args['ADD_STATIC_DEPENDENCIES'] = 0
     #--------------------------------------------
@@ -96,8 +105,8 @@ def DefaultLibraryConfig(c, env, args):
     
     args['prj_env'].Append(
     	STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME = 1,
-      CPPPATH = c['paths']+[join(curDir,'include')],
-      CPPDEFINES = c['defines']+[c['PROG_NAME']+"_EXPORT"]
+      CPPPATH = c['paths'],
+      CPPDEFINES = c['defines']+[c['PROG_NAME'].upper()+"_EXPORT"]
     )
 
     c['inclDepsDynamic'](env, args)
@@ -109,7 +118,7 @@ def DefaultLibraryConfig(c, env, args):
       args['PROG_NAME'] = c['PROG_NAME'] + "_test"
       args['prj_env'] = env.Clone()
       
-      args['prj_env'].Append( CPPPATH = c['paths']+[ join(curDir,'include') ] )
+      args['prj_env'].Append( CPPPATH = c['paths'] )
       AddDependency(args, c['PROG_NAME'], curDir)
       
       if c.get('inclDepsDynamic_tests')!=None:
@@ -123,7 +132,7 @@ def DefaultLibraryConfig(c, env, args):
       args['PROG_NAME'] = c['PROG_NAME'] + "_run"
       args['prj_env'] = env.Clone()
       
-      args['prj_env'].Append( CPPPATH = c['paths']+[ join(curDir,'include') ] )
+      args['prj_env'].Append( CPPPATH = c['paths'])
       AddDependency(args, c['PROG_NAME'], curDir)
       
       if c.get('inclDepsDynamic_run')!=None:
@@ -139,7 +148,7 @@ def DefaultLibraryConfig(c, env, args):
     args['prj_env'] = env.Clone()
     
     args['prj_env'].Append( 
-      CPPPATH = c['paths']+[join(curDir,'include')],
+      CPPPATH = c['paths'],
       CPPDEFINES = c['defines']+[(c['PROG_NAME']+"_static").upper()]
     )
     c['inclDepsStatic'](env, args)
@@ -152,7 +161,7 @@ def DefaultLibraryConfig(c, env, args):
       args['prj_env'] = env.Clone()
       enableQtModules(c,args['prj_env'],args,False)
       args['prj_env'].Append(
-        CPPPATH = c['paths']+[ join(curDir,'include') ],
+        CPPPATH = c['paths'],
         CPPDEFINES = c['defines']+[(c['PROG_NAME']+"_static").upper()]
       )
       AddDependency(args, c['PROG_NAME'], curDir)
@@ -168,7 +177,7 @@ def DefaultLibraryConfig(c, env, args):
       args['prj_env'] = env.Clone()
       
       args['prj_env'].Append(
-        CPPPATH = c['paths']+[ join(curDir,'include') ],
+        CPPPATH = c['paths'],
         CPPDEFINES = c['defines']+[(c['PROG_NAME']+"_static").upper()]
       )
       AddDependency(args, c['PROG_NAME'], curDir)
@@ -282,11 +291,12 @@ def AddDependencyConfig(args, dep, deppath):
   definesVar = []
   if args['ADD_STATIC_DEPENDENCIES'] == 1:
     definesVar = [dep.upper()]
+  print "CPPPATH+ "+deppath
   args['prj_env'].Append(
     LIBPATH = [os.path.join(deppath,args['configuration'],'lib')],
     LIBS = [dep+args['ARCHITECTURE_CODE']],
     LINKFLAGS = [],
-    CPPPATH = [os.path.join(deppath,'include')],
+    CPPPATH = [deppath],
     CPPDEFINES = definesVar,
     CCFLAGS = []
   )

@@ -1,12 +1,4 @@
-<%
-import sys
-sys.path.insert(0, a.parserPath)
 
-import parsing
-p = reload(parsing)
-p.parsing(a)
-
-%>
 from helper import *
 #           Environment
 Import( 'env', 'args' )
@@ -16,17 +8,19 @@ def add_dependencies(env, args):
     import cogging as c
     c.tpl(cog,templateFile,c.a(prefix=configFile))
     ]]]'''
-    '''[[[end]]]'''
+
+    AddDependency(args,'com_github_osblinnikov_ultra_cloud_actor_framework_libcaf_core',join(args['PROJECTS_ROOT_PATH'],'src/github.com/osblinnikov/ultra-cloud/actor-framework/libcaf_core'))
+    '''[[[end]]] (checksum: 53cb8fce97f2bb235c8a56d1d0a30797)'''
     # AddPthreads(env, args)
     # AddNetwork(args)
 
 c = {}
-c['PROG_NAME'] = '${a.fullName_}'
-#c['sourceFiles'] = ['${a.className}.c']
-#c['testFiles'] = ['${a.className}Test.c']
+c['PROG_NAME'] = 'com_github_osblinnikov_ultra_cloud_actor_framework_libcaf_io'
+#c['sourceFiles'] = ['libcaf_io.c']
+#c['testFiles'] = ['libcaf_ioTest.c']
 #c['runFiles'] = ['main.c']
 #c['defines'] = []
-#c['inclDeps'] = add_dependencies
+c['inclDeps'] = add_dependencies
 #c['inclDepsDynamic'] = add_dependencies
 #c['inclDepsDynamic_tests'] = add_dependencies
 #c['inclDepsDynamic_run'] = add_dependencies
