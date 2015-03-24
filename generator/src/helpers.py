@@ -17,12 +17,27 @@ def readyaml(filename):
             infile.close()
         except:
             return read_data
+    
+    if not read_data.has_key("buffers"):
+        read_data["buffers"] = []
 
     if not read_data.has_key("actors"):
         read_data["actors"] = []
 
     if not read_data.has_key("depends"):
         read_data["depends"] = []
+    
+    if not read_data.has_key("props"):
+        read_data["props"] = []
+
+    if not read_data.has_key("args"):
+        read_data["args"] = []
+
+    if not read_data.has_key("emit"):
+        read_data["emit"] = []
+
+    if not read_data.has_key("receive"):
+        read_data["receive"] = []
 
     return read_data
 
@@ -114,6 +129,9 @@ def filterTypes_c(t):
     if isArray:
         t = "arrayObject"
         isObject = True
+    t = getFullName_(t)
+    if isArray:
+        t = t.split("[")[0]
     return t, isObject, isArray, serializableType
 
 def splitClassPath(classPath):
@@ -126,6 +144,40 @@ def splitClassPath(classPath):
     del classPathList[0]
     classPathList = domainPrefix+classPathList
     return classPathList
+
+def nameFromStr(v):
+    s = v.split(" ")
+    return s[0]
+
+def typeFromStr(v):
+    s = v.split(" ")
+    if len(s) < 2:
+        print "ERROR: type is not found in the string "+v+"\n"
+        return "NOTYPE"
+    return s[1]
+
+def hasValueInStr(v):
+    s = v.split(" ")
+    return len(s) > 2
+
+def valueFromStr(v):
+    s = v.split(" ")
+    if len(s) < 3:
+        print "ERROR: value is not found in the string "+v+"\n"
+        return "NOVALUE"
+    return s[2]
+
+def sizeFromStr(v):
+    s = v.split("[")
+    if len(s) < 2:
+        print "ERROR: size is not found in the string "+v+"\n"
+        return "NOSIZE"
+    s = s[1].split("]")
+    try:
+        size = int(s[0])
+    except ValueError:
+        size = s[0]
+    return size
 
 
 def getClassName(path):

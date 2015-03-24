@@ -110,21 +110,39 @@ Separator " " separates `name` and `type`. The `name` field keeps an identificat
       "type":"github.com/osblinnikov/ultra-cloud/generator/exampleActor",
       "args":[
         "1000L", /*timeout_milisec*/ 
-        "fakePropertyArray" /*buffers*/ 
+        "fakePropertyArray" /*channels*/ 
       }],
       "parallel":"fakeArgument", /*[optional] count of actor instances which will work in parallel*/
       "dispatchEvery":"1000L", /*[optional] if actor work+sleep more than the specified miliseconds then the dispatcher must launch it again*/
-      "emit":["buffer0", "buffer1"], /*sends the emitted data directly into the specified buffers*/
-      "receive":["buffer2", "buffer3", "export receiveInteger"] /*receives the emitted data directly from the specified buffers or exported connectors, the exporting of connectors allows Ultra-Cloud to build heirarchies of the actors topologies*/
+      "emit":["locationChannel", "positionChannel"], /*sends the emitted data directly into the specified channels*/
+      "receive":["position", "location", "phoneNumber"] /*receives the emitted data directly from the specified channels or exported connectors, the exporting of connectors allows Ultra-Cloud to build heirarchies of the actors topologies*/
     }]
 
-8. `buffers` field is another cornerstone of the Ultra-Cloud project. The buffers are always sit in the middle between the actors allowing to send messages. 
+8. `channels` field is another cornerstone of the Ultra-Cloud project. The channels are always sit in the middle between the actors allow sending the messages. 
+    
+    "channels":[{
+      "name":"locationChannel",
+      "type":"github.com/osblinnikov/ultra-cloud/BroadcastChannel",
+      "args":[
+        "storagesArray",
+        "timeoutMillisecLong"
+      ],
+      "emit":["actor0 location","actor1 spaceCoordinate"]
+    },{
+      "name":"webSocketConnectionChannel",
+      "type":"github.com/osblinnikov/ultra-cloud/BroadcastChannel",
+      "args":[
+        "storagesArray",
+        "timeoutMillisecLong"
+      ],
+      "emit":["actor0 location","actor1 spaceCoordinate"]????????????????????? todo: how to send different data types
+    }
  
-New types of buffers can be created by anyone who need it. For example one would implement a buffer for the connection to the specifed WebSocket server. Another wants to convert the developed topology into the distributed application with proprietary network messaging. But to use the custom buffers in applications developer needs to register them in the BuffersFactory.
+New types of channels can be created by anyone who need it. For example one would implement a Round-Robin channel, another a channel for the connection to the specified WebSocket server. To use the custom channels in applications the developer needs to register them in the ChannelsFactory.
 
-Buffer must follow to the programming guidelines and BufferInterface of Ultra-Cloud project.
+Channel must follow to the programming guidelines and ChannelInterface of Ultra-Cloud project.
 
-Developement of a new buffer module (BufferInterface)
+Developement of a new channel module (ChannelInterface)
 ---
 
 

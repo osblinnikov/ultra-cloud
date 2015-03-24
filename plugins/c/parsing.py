@@ -56,20 +56,20 @@ from helpers import *
 #     arr.append("reader r"+str(i))
 #   return arr
 
-# def getargsArrStrs(a):
-#   arr = ["_NAME_"]
-#   for v in a.read_data["args"]:
-#     t, isObject, isArray, isSerializable = filterTypes_c(v["type"])
-#     # v["type"] = t
-#     arr.append("_"+v["name"])
+def getargsArrStrs(a):
+  arr = ["_NAME_"]
+  for v in a.read_data["args"]:
+    # t, isObject, isArray, isSerializable = filterTypes_c(v["type"])
+    # v["type"] = t
+    arr.append("_"+v["name"])
 
-#   for i,v in enumerate(a.read_data["connection"]["writeTo"]):
-#     arr.append("_w"+str(i))
+  for i,v in enumerate(a.read_data["emit"]):
+    arr.append("_"+nameFromStr(v)+"W"+str(i))
 
-#   for i,v in enumerate(a.read_data["connection"]["readFrom"]):
-#     arr.append("_r"+str(i))
+  for i,v in enumerate(a.read_data["receive"]):
+    arr.append("_"+nameFromStr(v)+"R"+str(i))
 
-#   return arr
+  return arr
 
 # def groupId(path):
 #   path = path.split(".")
@@ -108,42 +108,42 @@ def getProps(a):
   # out = "  "+';'.join(fieldsArray)+';\n' if len(fieldsArray)>0 else ''
   return out
 
+def getDestructor(a):
+  out = ""
+  return out
+
 def getConstructor(a):
   out = ""
-  # argsArray = getargsArrStrs(a)
-  # out += "#define "+a.fullName_+"_create("+','.join(argsArray)+")"
-  # out += "\\\n    "+a.fullName_+" _NAME_;"
-  # for value in a.read_data["args"]:
-  #   out += "\\\n    _NAME_."+value["name"]+" = _"+value["name"]+";"
+  argsArray = getargsArrStrs(a)
+  out += "#define "+a.fullName_+"_create("+','.join(argsArray)+")"
+  out += "\\\n    "+a.fullName_+" _NAME_;"
+  for v in a.read_data["args"]:
+    out += "\\\n    _NAME_."+nameFromStr(v)+" = _"+nameFromStr(v)+";"
 
-  # out += "\\\n    "+a.fullName_+"_onCreateMacro(_NAME_)"
+  out += "\\\n    "+a.fullName_+"_onCreateMacro(_NAME_)"
 
-  # if a.read_data.has_key("props"):
-  #   for value in a.read_data["props"]:
-  #     t, isObject, isArray, isSerializable  = filterTypes_c(value["type"])
-  #     if value.has_key("value"):
-  #       out += "\\\n    _NAME_."+value["name"]+" = "+value["value"]+";"
-  #     elif isArray:
-  #       arrItemType, itemIsObject, itemIsArray, itemisSerializable = filterTypes_c(value["type"][:-2])
-  #       if isinstance(value["size"], basestring):
-  #         value["size"] = "_"+value["size"]
-  #       out += "\\\n    arrayObject_create(_NAME_##_"+value["name"]+"_, "+'_'.join(arrItemType.split('.'))+", "+str(value["size"])+")"
-  #       out += "\\\n    _NAME_."+value["name"]+" = _NAME_##_"+value["name"]+"_;"
+  for i,v in enumerate(a.read_data["props"]):
+      t, isObject, isArray, isSerializable  = filterTypes_c(typeFromStr(v))
+      if hasValueInStr(v):
+        out += "\\\n    _NAME_."+valueFromStr(v)+" = "+valueFromStr(v)+";"
+      elif isArray:
+        newArrayName = "_NAME_##_"+nameFromStr(v)+"_"
+        out += "\\\n    arrayObject_create("+newArrayName+", "+t+", "+str(sizeFromStr(v))+")"
+        out += "\\\n    _NAME_."+nameFromStr(v)+" = "+newArrayName+";"
 
 
-  # for i,v in enumerate(a.read_data["connection"]["writeTo"]):
-  #   out += "\\\n    _NAME_.w"+str(i)+" = _w"+str(i)+";"
-  # for i,v in enumerate(a.read_data["connection"]["readFrom"]):
-  #   out += "\\\n    _NAME_.r"+str(i)+" = _r"+str(i)+";"
+  for i,v in enumerate(a.read_data["emit"]):
+    out += "\\\n    _NAME_."+nameFromStr(v)+"W"+str(i)+" = _"+nameFromStr(v)+"W"+str(i)+";"
+  for i,v in enumerate(a.read_data["receive"]):
+    out += "\\\n    _NAME_."+nameFromStr(v)+"R"+str(i)+" = _"+nameFromStr(v)+"R"+str(i)+";"
   
-  # if a.read_data.has_key("props"):
-  #   for i,v in enumerate(a.read_data["props"]):
-  #     if v.has_key("value"):
-  #       out += "\\\n    _NAME_."+v["name"]+" = "+v["value"]+";"  
-  # out += "\\\n    "+a.fullName_+"_initialize(&_NAME_);"
-  # out += initializeBuffers(a)
+  for i,v in enumerate(a.read_data["props"]):
+    if hasValueInStr(v):
+      out += "\\\n    _NAME_."+nameFromStr(v)+" = "+valueFromStr(v)+";"  
+  out += "\\\n    "+a.fullName_+"_onCreate(&_NAME_);"
+  out += initializeBuffers(a)
   # out += "\\\n    "+a.fullName_+"_onKernels(&_NAME_);"
-  # out += initializeKernels(a)
+  out += initializeKernels(a)
   return out
 
 # def getContainerClass(a):
@@ -308,35 +308,35 @@ def declareBlocks(a):
 #       return True
 #   return False
 
-# def initializeBuffers(a):
-#   out = ""
-#   #buffers
-#   for blockNum, v in enumerate(a.read_data["blocks"]):
-#     if not v.has_key("type") or v["type"] != "buffer":
-#       continue
-#     pathList = v["path"].split('.')
-#     argsList = []
-#     for d in v["args"]:
-#       castType = ""
-#       if d.has_key("type"):
-#         t, isObject, isArray, isSerializable  = filterTypes_c(d["type"])
-#         if t != "arrayObject":
-#           castType = "("+t+")"
-#       argValue = str(d["value"])
-#       if searchPropertyAndArgName(a,d["value"]):
-#         argValue = "_NAME_."+argValue
-#       argsList.append(castType+argValue)
-#     #create variables
-#     out += "\\\n    "+'_'.join(pathList)+"_create("+','.join([v["name"]]+argsList)+")"
-#     out += "\\\n    _NAME_."+v["name"]+" = "+v["name"]+";"
-#     #get writer from buffer
-#     for i,w in enumerate(v["connection"]["writeTo"]):
-#       out += "\\\n    "+'_'.join(pathList)+"_createReader("+','.join([ "_NAME_##"+v["name"]+"r"+str(i),  "&_NAME_."+v["name"]] + getRwArgs(i,w))+")"
-#       connectBufferToReader(a, blockNum, i, w)
-#     #get reader from buffer
-#     for i,w in enumerate(v["connection"]["readFrom"]):
-#       out += "\\\n    "+'_'.join(pathList)+"_createWriter("+','.join([ "_NAME_##"+v["name"]+"w"+str(i),  "&_NAME_."+v["name"]] + getRwArgs(i,w))+")"
-#   return out
+def initializeBuffers(a):
+  out = ""
+  #buffers
+  for bufferNumber, v in enumerate(a.read_data["buffers"]):
+    if not v.has_key("type") or v["type"] != "buffer":
+      continue
+    pathList = v["path"].split('.')
+    argsList = []
+    for d in v["args"]:
+      castType = ""
+      if d.has_key("type"):
+        t, isObject, isArray, isSerializable  = filterTypes_c(d["type"])
+        if t != "arrayObject":
+          castType = "("+t+")"
+      argValue = str(d["value"])
+      if searchPropertyAndArgName(a,d["value"]):
+        argValue = "_NAME_."+argValue
+      argsList.append(castType+argValue)
+    #create variables
+    out += "\\\n    "+'_'.join(pathList)+"_create("+','.join([v["name"]]+argsList)+")"
+    out += "\\\n    _NAME_."+v["name"]+" = "+v["name"]+";"
+    #get writer from buffer
+    for i,w in enumerate(v["connection"]["writeTo"]):
+      out += "\\\n    "+'_'.join(pathList)+"_createReader("+','.join([ "_NAME_##"+v["name"]+"r"+str(i),  "&_NAME_."+v["name"]] + getRwArgs(i,w))+")"
+      connectBufferToReader(a, blockNum, i, w)
+    #get reader from buffer
+    for i,w in enumerate(v["connection"]["readFrom"]):
+      out += "\\\n    "+'_'.join(pathList)+"_createWriter("+','.join([ "_NAME_##"+v["name"]+"w"+str(i),  "&_NAME_."+v["name"]] + getRwArgs(i,w))+")"
+  return out
 
 # def initializeKernels(a):
 #   out = ""
