@@ -3,6 +3,7 @@ import sys
 import os
 
 from generator.generator import Generator
+from snocs import snocs
 
 def printHelp():
     print "**********************"
@@ -11,6 +12,7 @@ def printHelp():
     print "Usage: ucl [options]"
     print "options:"
     print "  gen"
+    print "  snocs"
     print "**********************"
 
 if __name__ == "__main__":
@@ -19,3 +21,5 @@ if __name__ == "__main__":
         exit()
     if sys.argv[1] == 'gen':
         Generator(sys.argv[1:])
+    if sys.argv[1] == 'snocs':
+        snocs.main(sys.argv[1:])

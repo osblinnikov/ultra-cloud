@@ -1,0 +1,82 @@
+import os.path
+import sys
+from builder import *
+
+args = prepare_args(ARGUMENTS)
+
+env = Environment(
+    TESTNORUN = args['TESTNORUN'],
+    BUILDERS = {'Test' :  Builder(action = builder_unit_test)},
+    TOOLS  = args['TOOLS'],    
+    TARGET_ARCH  = args['TARGET_ARCH'],
+    MSVC_VERSION = args['MSVC_VERSION'],
+    LIBPATH = args['LIBPATH'],
+    LIBS = args['LIBS'],
+    LINKFLAGS = args['LINKFLAGS'],
+    # CC=args['CC'],
+    CPPPATH = args['CPPPATH'],
+    CPPDEFINES = args['CPPDEFINES'],
+    CCFLAGS = args['CCFLAGS'],
+    CCCOMSTR = args['CCCOMSTR'],
+    LINKCOMSTR = args['LINKCOMSTR'],
+    ENV = os.environ
+)
+
+if args.has_key('CC') and args['CC'] != None:
+    env.Replace(CC=args['CC'])
+if args.has_key('LINK') and args['LINK'] != None:
+    env.Replace(LINK=args['LINK'])
+
+env.AppendENVPath('LD_LIBRARY_PATH', os.path.join(args['INSTALL_PATH'],'lib'))
+env.AppendENVPath('PATH', os.path.join(args['INSTALL_PATH'],'lib'))
+env.AppendENVPath('PKG_CONFIG_PATH', os.path.join(args['INSTALL_PATH'],'lib','pkgconfig'))
+
+if args.has_key('QT_DIR_NAME'):
+    env[args['QT_DIR_NAME']] = args['QT_DIR']
+    env.AppendENVPath('PKG_CONFIG_PATH', args['QT_PKG_CONFIG_PATH'])
+    env.Tool(args['QT_TOOL'])
+                
+# Progress('Evaluating $TARGET\n')
+env.Decider( 'MD5-timestamp' )          # For speed, use timestamps for change, followed by MD5
+# Export this environment for use by the SNocscript files
+Export( 'env', 'args' )
+
+#--------------------------------------
+#           SOLUTION Builders
+#--------------------------------------
+args['SNOCSCRIPT_PATH'] = os.path.abspath(os.path.dirname(args['SNOCSCRIPT']))
+preparePaths(env,args)
+                
+#start main build
+print args['SNOCSCRIPT']
+SConscript( args['SNOCSCRIPT'] )
+if args['ONLY_PROJECT_CLEANING_STAGE'] == '0':
+    #Include crossproject dependencies
+    dictLaunchedDependencies = {}
+    if args.get('CROSSPROJECT_DEPENDENCIES')!=None:
+        foundNewDependency = 1
+        while foundNewDependency == 1:
+            foundNewDependency = 0
+            for depFullPath in args['CROSSPROJECT_DEPENDENCIES']:
+                if depFullPath not in dictLaunchedDependencies:
+                    foundNewDependency = 1
+                    args['SNOCSCRIPT'] = os.path.join(depFullPath,'SNocscript.py')
+                    args['SNOCSCRIPT_PATH'] = os.path.abspath(os.path.dirname(args['SNOCSCRIPT']))
+                    preparePaths(env,args)
+                    #start building dependency
+                    # print args['SNOCSCRIPT']
+                    SConscript(args['SNOCSCRIPT'])
+                    dictLaunchedDependencies[depFullPath] = 1
+                    break
+    #--------------------------------------
+    #           Setting scons require()
+    #--------------------------------------
+    for prog in args['APP_DEPENDENCIES']:
+        for dep in args['APP_DEPENDENCIES'][prog]:
+            # print prog+" depending on "+dep
+            if args['APP_BUILD'].has_key(prog) and args['APP_BUILD'].has_key(dep):
+                Requires(args['APP_BUILD'][prog], args['APP_BUILD'][dep])
+
+args['INSTALL_ALIASES'].append( args['TEST_ALIASES'] )
+Alias('test', args['TEST_ALIASES'])#run when test command provided in command line
+Alias('install', args['INSTALL_ALIASES'])#run when install command provided in command line

@@ -99,7 +99,7 @@ def generateMissedFiles(topology_dir, generator_dir, classPath, extra_args):
                 .replace("_NAME_", className) \
                 .replace("_FULLNAME_", fullName_) \
                 .replace("_FULLNAMEDIR_", os.path.join(*[fullName_, ""])) \
-                .replace("_PATH_", os.path.join(*(classPathList+[""])))
+                .replace("_PATH_", os.path.join(*(classPathList[:-1]+[""])))
             
             absDstFilePath = os.path.join(topology_dir, relativeFilePath) #os.path.split(generator_dir)[1], 
 
