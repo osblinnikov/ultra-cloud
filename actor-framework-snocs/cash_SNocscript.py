@@ -14,11 +14,11 @@ def add_dependencies(env, args):
     '''[[[end]]] (checksum: 68b329da9893e34099c7d8ad5cb9c940)'''
     AddPthreads(env, args)
     # AddNetwork(args)
-    conf = Configure(env)
+    conf = Configure(args['prj_env'])
     if not conf.CheckLibWithHeader('edit', 'histedit.h', 'c'):
         print 'Did not find libedit.a or edit.lib, exiting!'
         Exit(1)
-    env = conf.Finish()
+    args['prj_env'] = conf.Finish()
 
 
 c = {}
