@@ -1,7 +1,0 @@
-name: "github.com/osblinnikov/ultra-cloud/actor-framework/libcaf_opencl"
-gen: [
-  "github.com/osblinnikov/ultra-cloud/plugins/snocs"
-]
-depends: [
-  "github.com/osblinnikov/ultra-cloud/actor-framework/libcaf_core"
-]

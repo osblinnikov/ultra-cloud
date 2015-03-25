@@ -1,4 +1,0 @@
-name: "github.com/osblinnikov/ultra-cloud/actor-framework/libcaf_core"
-gen: [
-   "github.com/osblinnikov/ultra-cloud/plugins/snocs"
-]

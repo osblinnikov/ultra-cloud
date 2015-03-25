@@ -8,14 +8,6 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 cd $SCRIPTPATH
 
-
-#cp actor-framework-snocs/libcaf_core_ucl.yaml actor-framework/libcaf_core/ucl.yaml
-#cp actor-framework-snocs/libcaf_io_ucl.yaml actor-framework/libcaf_io/ucl.yaml
-#cp actor-framework-snocs/libcaf_opencl_ucl.yaml actor-framework/libcaf_opencl/ucl.yaml
-#cp actor-framework-snocs/libcaf_riac_ucl.yaml actor-framework/libcaf_riac/ucl.yaml
-#cp actor-framework-snocs/nexus_ucl.yaml actor-framework/nexus/ucl.yaml
-#cp actor-framework-snocs/cash_ucl.yaml actor-framework/cash/ucl.yaml
-
 cp actor-framework-snocs/libcaf_core_SNocscript.py actor-framework/libcaf_core/SNocscript.py 
 cp actor-framework-snocs/libcaf_io_SNocscript.py actor-framework/libcaf_io/SNocscript.py
 cp actor-framework-snocs/libcaf_opencl_SNocscript.py actor-framework/libcaf_opencl/SNocscript.py
