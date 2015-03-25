@@ -200,7 +200,7 @@ def PrefixProgram(args, folder, srcs):
   trgt = args['PROG_NAME']
   print trgt
   
-  folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+args['configuration']+'.tmp')
+  folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+"_"+args['configuration']+'.tmp')
   args['prj_env'].VariantDir(folder_trgt, folder, duplicate=0)
   #------------  COG  -------------------
   cogging(PrefixSources(args, folder, srcs), args['CLEANING_STAGE'])
@@ -225,7 +225,7 @@ def PrefixProgram(args, folder, srcs):
 def PrefixTest(args, folder, srcs):
   folder = os.path.join(args['SNOCSCRIPT_PATH'],folder)
   trgt = args['PROG_NAME']
-  folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+args['configuration']+'.tmp')
+  folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+"_"+args['configuration']+'.tmp')
   args['prj_env'].VariantDir(folder_trgt, folder, duplicate=0)
   #------------  COG  -------------------
   cogging(PrefixSources(args, folder, srcs), args['CLEANING_STAGE'])
@@ -250,7 +250,7 @@ def PrefixTest(args, folder, srcs):
 def PrefixLibrary(args, folder, srcs):
   folder = os.path.join(args['SNOCSCRIPT_PATH'],folder)
   trgt = args['PROG_NAME']
-  folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+args['configuration']+'.tmp')
+  folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+"_"+args['configuration']+'.tmp')
   args['prj_env'].VariantDir(folder_trgt, folder, duplicate=0)
   #------------  COG  -------------------
   cogging(PrefixSources(args, folder, srcs), args['CLEANING_STAGE'])
@@ -268,7 +268,7 @@ def PrefixLibrary(args, folder, srcs):
 def PrefixSharedLibrary(args, folder, srcs):
   folder = os.path.join(args['SNOCSCRIPT_PATH'],folder)
   trgt = args['PROG_NAME']
-  folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+args['configuration']+'.tmp')
+  folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+"_"+args['configuration']+'.tmp')
   args['prj_env'].VariantDir(folder_trgt, folder, duplicate=0)
   #------------  COG  -------------------
   cogging(PrefixSources(args, folder, srcs), args['CLEANING_STAGE'])

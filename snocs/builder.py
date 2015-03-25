@@ -22,8 +22,8 @@ def prepare_args(ARGUMENTS):
         args['NO_DYNAMIC_BUILD'] = '0'
         args['NO_STATIC_BUILD'] = '1'
     # args['CC'] = None
-    args['CLEANING_STAGE'] = ARGUMENTS.get('cleaning_all', '0')
-    args['ONLY_PROJECT_CLEANING_STAGE'] = ARGUMENTS.get('cleaning_one', '0')
+    args['CLEANING_STAGE'] = ARGUMENTS.get('cleaning', '0')
+    args['ALL_PROJECTS'] = ARGUMENTS.get('build_all', '0')
     args['TESTNORUN'] = ARGUMENTS.get('testnorun', '0')
     args['SNOCSCRIPT'] = ARGUMENTS.get('snocscript', None)
     if args['SNOCSCRIPT'] == None or args['SNOCSCRIPT']=="":
@@ -143,8 +143,8 @@ def printHelp():
     print "  testnorun=0 | 1 #disables tests run in case of test/install targets"
     print "  -r        # execute SNocscriptFilePath/SNocscript as Python script"
     print "  -h        # print this help"
-    print "  -c        # execute cleaning only for chosen SNocscript, not dependent libs"
-    print "  -call     # execute cleaning for current and all dependent projects"
+    print "  -c        # execute cleaning"
+    print "  -all      # execute for all dependent projects"
     print "**********************"
     print "Other options can be SCons specific."
     print "  If you want to change default path to the Projects directory please see the"

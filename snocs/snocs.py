@@ -43,34 +43,29 @@ def main(argv):
             exit()
         
     OTHER_ARGUMENTS = ""
-    ONLY_PROJECT_CLEANING_STAGE = 0
+    ALL_PROJECTS = 0
     CLEANING_STAGE = 0
     if len(argv) > firstRealArgI + 1:
         for i in range(firstRealArgI+1, len(argv)):
             if argv[i] == '-h':
                 printHelp()
                 exit()
-            if argv[i] == '-r':
+            elif argv[i] == '-r':
                 os.system("python "+SNocscript+" "+os.path.join(PROJECTS_ROOT_PATH,'src'))
                 #imp.load_source('SNocscript',os.path.dirname(SNocscript))
                 exit()
-            if argv[i] == '-c':
-                print "ONLY CURRENT PROJECT WILL BE CLEARED"
-                ONLY_PROJECT_CLEANING_STAGE = 1
+            elif argv[i] == '-all':
+                ALL_PROJECTS = 1
+                continue
+            elif argv[i] == '-c':
                 CLEANING_STAGE = 1
-            if argv[i] == '-call':
-                print "ALL DEPENDENCIES WILL BE CLEARED"
-                OTHER_ARGUMENTS+=" -c"
-                CLEANING_STAGE = 1
-            else:
-                #FOR ALL EXCEPT -call
-                OTHER_ARGUMENTS+=" "+argv[i]
+            OTHER_ARGUMENTS+=" "+argv[i]
         #end for arguments
         
-    if ONLY_PROJECT_CLEANING_STAGE == 1:
-        OTHER_ARGUMENTS+=" cleaning_one=1"
+    if ALL_PROJECTS == 1:
+        OTHER_ARGUMENTS +=" build_all=1"
     if CLEANING_STAGE == 1:
-        OTHER_ARGUMENTS+=" cleaning_all=1"
+        OTHER_ARGUMENTS+=" -c cleaning=1"
     os.system("scons -f "+os.path.abspath(os.path.dirname(__file__))+"/SNocstruct snocscript="+SNocscript+OTHER_ARGUMENTS)
 
 
