@@ -22,6 +22,7 @@ cp actor-framework-snocs/libcaf_opencl_SNocscript.py actor-framework/libcaf_open
 cp actor-framework-snocs/libcaf_riac_SNocscript.py actor-framework/libcaf_riac/SNocscript.py
 cp actor-framework-snocs/nexus_SNocscript.py actor-framework/nexus/SNocscript.py
 cp actor-framework-snocs/cash_SNocscript.py actor-framework/cash/SNocscript.py
+cp actor-framework-snocs/unit_testing_SNocscript.py actor-framework/unit_testing/SNocscript.py
 
 ./ucl snocs ${*:1} compiler=gpp_cpp11
 

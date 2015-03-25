@@ -21,6 +21,12 @@ def prepare_args(ARGUMENTS):
     else:
         args['NO_DYNAMIC_BUILD'] = '0'
         args['NO_STATIC_BUILD'] = '1'
+
+    if args['NO_STATIC_BUILD'] != '1':
+        args['ADD_STATIC_DEPENDENCIES'] = 1
+    if args['NO_DYNAMIC_BUILD'] != '1':
+        args['ADD_STATIC_DEPENDENCIES'] = 0        
+
     # args['CC'] = None
     args['CLEANING_STAGE'] = ARGUMENTS.get('cleaning', '0')
     args['ALL_PROJECTS'] = ARGUMENTS.get('build_all', '0')

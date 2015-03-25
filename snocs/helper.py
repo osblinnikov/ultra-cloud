@@ -33,13 +33,11 @@ def DefaultParentConfig(c,env,args):
 
   if args['NO_DYNAMIC_BUILD'] != '1':
     args['prj_env'] = env.Clone()
-    args['ADD_STATIC_DEPENDENCIES'] = 0
     c['inclDepsDynamic'](env,args)
 
   if args['NO_STATIC_BUILD'] != '1':
     args['PROG_NAME'] += "_static"
     args['prj_env'] = env.Clone()
-    args['ADD_STATIC_DEPENDENCIES'] = 1
     c['inclDepsStatic'](env,args)
 
 def enableQtModules(c,env,args,isUiBuildEnabled):
@@ -106,7 +104,6 @@ def DefaultLibraryConfig(c, env, args):
 
   
   if args['NO_DYNAMIC_BUILD'] != '1':
-    args['ADD_STATIC_DEPENDENCIES'] = 0
     #--------------------------------------------
     #      SHARED
     args['PROG_NAME'] = c['PROG_NAME']
@@ -151,7 +148,6 @@ def DefaultLibraryConfig(c, env, args):
       env.Default(PrefixProgram(args, 'src', c['runFiles']))
 
   if args['NO_STATIC_BUILD'] != '1':
-    args['ADD_STATIC_DEPENDENCIES'] = 1
     #      STATIC
     args['PROG_NAME'] = c['PROG_NAME'] + "_static"
     args['prj_env'] = env.Clone()
@@ -198,7 +194,7 @@ def DefaultLibraryConfig(c, env, args):
       env.Default(PrefixProgram(args, 'src', c['runFiles']))
 
 def PrefixProgram(args, folder, srcs):
-  folder = os.path.join(args['SNOCSCRIPT_PATH'],folder)
+  folder = os.path.abspath(os.path.join(args['SNOCSCRIPT_PATH'],folder))
   trgt = args['PROG_NAME']
   print trgt
   
@@ -225,7 +221,7 @@ def PrefixProgram(args, folder, srcs):
   return args['APP_BUILD'][targetFullPath]
 
 def PrefixTest(args, folder, srcs):
-  folder = os.path.join(args['SNOCSCRIPT_PATH'],folder)
+  folder = os.path.abspath(os.path.join(args['SNOCSCRIPT_PATH'],folder))
   trgt = args['PROG_NAME']
   folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+"_"+args['configuration']+'.tmp')
   args['prj_env'].VariantDir(folder_trgt, folder, duplicate=0)
@@ -250,7 +246,7 @@ def PrefixTest(args, folder, srcs):
 
 # Similar to PrefixProgram above, except for Library
 def PrefixLibrary(args, folder, srcs):
-  folder = os.path.join(args['SNOCSCRIPT_PATH'],folder)
+  folder = os.path.abspath(os.path.join(args['SNOCSCRIPT_PATH'],folder))
   trgt = args['PROG_NAME']
   folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+"_"+args['configuration']+'.tmp')
   args['prj_env'].VariantDir(folder_trgt, folder, duplicate=0)
@@ -268,7 +264,7 @@ def PrefixLibrary(args, folder, srcs):
   
 # Similar to PrefixProgram above, except for SharedLibrary
 def PrefixSharedLibrary(args, folder, srcs):
-  folder = os.path.join(args['SNOCSCRIPT_PATH'],folder)
+  folder = os.path.abspath(os.path.join(args['SNOCSCRIPT_PATH'],folder))
   trgt = args['PROG_NAME']
   folder_trgt = os.path.join(folder, trgt+args['ARCHITECTURE_CODE']+"_"+args['configuration']+'.tmp')
   args['prj_env'].VariantDir(folder_trgt, folder, duplicate=0)

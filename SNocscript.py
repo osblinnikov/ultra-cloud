@@ -10,6 +10,7 @@ def add_dependencies(env, args):
   AddDependency(args,'com_github_osblinnikov_ultra_cloud_actor_framework_libcaf_riac',join(args['PROJECTS_ROOT_PATH'],'src/github.com/osblinnikov/ultra-cloud/actor-framework/libcaf_riac'))
   AddDependency(args,'com_github_osblinnikov_ultra_cloud_actor_framework_nexus',join(args['PROJECTS_ROOT_PATH'],'src/github.com/osblinnikov/ultra-cloud/actor-framework/nexus'))
   AddDependency(args,'com_github_osblinnikov_ultra_cloud_actor_framework_cash',join(args['PROJECTS_ROOT_PATH'],'src/github.com/osblinnikov/ultra-cloud/actor-framework/cash'))
+  AddDependency(args,'com_github_osblinnikov_ultra_cloud_actor_framework_unit_testing',join(args['PROJECTS_ROOT_PATH'],'src/github.com/osblinnikov/ultra-cloud/actor-framework/unit_testing'))
 
 c = {}
 c['PROG_NAME'] = 'com_github_osblinnikov_ultra_cloud_parent'
