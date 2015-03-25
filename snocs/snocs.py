@@ -20,12 +20,8 @@ def main(argv):
             printHelp()
             exit()
     else:
-        #try to find the SNocscript right here
-        if os.path.exists(os.path.join(os.getcwd(),"SNocscript.py")):
-            firstRealArgI = firstRealArgI - 1
-            SNocscript = os.path.join(os.getcwd(),"SNocscript.py")
         #try to find the SNocscript in the specified absolute path
-        elif os.path.exists(os.path.join(argv[firstRealArgI],"SNocscript.py")):
+        if os.path.exists(os.path.join(argv[firstRealArgI],"SNocscript.py")):
             SNocscript = os.path.join(argv[firstRealArgI],"SNocscript.py")
         #try to find the SNocscript in the specified relative to current path
         elif os.path.exists(os.path.join(os.getcwd(),argv[firstRealArgI],"SNocscript.py")):
@@ -33,6 +29,10 @@ def main(argv):
         #try to find the SNocscript in the specified path from projects src root
         elif os.path.exists(os.path.join(PROJECTS_ROOT_PATH,'src',argv[firstRealArgI],"SNocscript.py")):
             SNocscript = os.path.join(PROJECTS_ROOT_PATH,'src',argv[firstRealArgI],"SNocscript.py")
+        #try to find the SNocscript right here
+        elif os.path.exists(os.path.join(os.getcwd(),"SNocscript.py")):
+            firstRealArgI = firstRealArgI - 1
+            SNocscript = os.path.join(os.getcwd(),"SNocscript.py")
         else:
             print "No "+os.path.join(os.getcwd(),"SNocscript.py")
             print "No "+os.path.join(argv[firstRealArgI],"SNocscript.py")
