@@ -97,6 +97,8 @@ def DefaultLibraryConfig(c, env, args):
       srcFolder = os.path.join(args['SNOCSCRIPT_PATH'],'src')
       for root, dirs, files in os.walk(srcFolder):
         for fileName in files:
+          if fileName == 'main.cpp' or fileName == 'main.c':
+            continue
           if (len(fileName)>4 and fileName[-4:] == '.cpp') or (len(fileName)>2 and fileName[-2:] == '.c'):
             fileP = os.path.join(root,fileName)
             relativeFilePath =  fileP[(len(srcFolder)+1):]
@@ -298,7 +300,7 @@ def AddDependencyConfig(args, dep, deppath):
   definesVar = []
   if args['ADD_STATIC_DEPENDENCIES'] == 1:
     definesVar = [dep.upper()]
-  print "CPPPATH+ "+deppath
+  # print "CPPPATH+ "+deppath
   args['prj_env'].Append(
     LIBPATH = [os.path.join(deppath,args['configuration'],'lib')],
     LIBS = [dep+args['ARCHITECTURE_CODE']],

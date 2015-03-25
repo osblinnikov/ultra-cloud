@@ -1,2 +1,4 @@
 *.pyc
 *.dblite
+config.log
+.scon*
