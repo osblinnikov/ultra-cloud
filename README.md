@@ -1,8 +1,6 @@
 # Ultra-Cloud project
 
-Implementation of actors suitable for real-time, embedded and distributed systems
-
-This project is the refactoring and learning from mistakes in [airu project](https://github.com/airutech/airutech)
+Implementation of actors topologies suitable for real-time, embedded and distributed systems
 
 The actors model suggests that every agent within the framework is a dynamic entity which communicates preferably only via message passing and can even create new agents. Parent actors can also serve only composition purpose without handling the actual workload. 
 
