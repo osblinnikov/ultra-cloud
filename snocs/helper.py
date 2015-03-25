@@ -28,7 +28,8 @@ def cogging(files, CLEANING_STAGE):
   return
 
 def DefaultParentConfig(c,env,args):
-  args['PROG_NAME'] = "cnets_parent"
+  testInclDeps(c)
+  args['PROG_NAME'] = c['PROG_NAME']
 
   if args['NO_DYNAMIC_BUILD'] != '1':
     args['prj_env'] = env.Clone()
@@ -58,20 +59,11 @@ def enableQtModules(c,env,args,isUiBuildEnabled):
 def funcInclDeps(env,args):
   return
 
-def DefaultLibraryConfig(c, env, args):
+def testInclDeps(c):
   if not c.has_key('inclDeps'):
     defInclDeps = funcInclDeps
   else:
     defInclDeps = c['inclDeps']
-
-  curDir = args['SNOCSCRIPT_PATH']
-
-  if not c.has_key("paths"):
-    c['paths'] = []
-  c['paths'].append(curDir)
-
-  if not c.has_key("defines"):
-    c['defines'] = []
   if not c.has_key("inclDepsStatic"):
     c['inclDepsStatic'] = defInclDeps
   if not c.has_key("inclDepsStatic_tests"):
@@ -84,6 +76,21 @@ def DefaultLibraryConfig(c, env, args):
     c['inclDepsDynamic_tests'] = defInclDeps
   if not c.has_key("inclDepsDynamic_run"):
     c['inclDepsDynamic_run'] = defInclDeps
+
+def DefaultLibraryConfig(c, env, args):
+
+
+  curDir = args['SNOCSCRIPT_PATH']
+
+  if not c.has_key("paths"):
+    c['paths'] = []
+  c['paths'].append(curDir)
+
+  if not c.has_key("defines"):
+    c['defines'] = []
+
+  testInclDeps(c)
+
 
   if not c.has_key("sourceFiles") or len(c['sourceFiles'])==0:
       c['sourceFiles'] = []
