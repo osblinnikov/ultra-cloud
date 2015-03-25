@@ -104,7 +104,7 @@ def DefaultLibraryConfig(c, env, args):
     args['prj_env'] = env.Clone()
     
     args['prj_env'].Append(
-    	STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME = 1,
+    	# STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME = 1,
       CPPPATH = c['paths'],
       CPPDEFINES = c['defines']+[c['PROG_NAME'].upper()+"_EXPORT"]
     )
