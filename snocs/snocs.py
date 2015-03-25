@@ -65,8 +65,11 @@ def main(argv):
     if ALL_PROJECTS == 1:
         OTHER_ARGUMENTS +=" build_all=1"
     if CLEANING_STAGE == 1:
-        OTHER_ARGUMENTS+=" -c cleaning=1"
-    os.system("scons -f "+os.path.abspath(os.path.dirname(__file__))+"/SNocstruct snocscript="+SNocscript+OTHER_ARGUMENTS)
+        OTHER_ARGUMENTS +=" cleaning=1"
+
+    snocsStr = "scons -f "+os.path.abspath(os.path.dirname(__file__))+"/SNocstruct snocscript="+SNocscript+OTHER_ARGUMENTS
+    # print snocsStr
+    os.system(snocsStr)
 
 
 if __name__ == '__main__':

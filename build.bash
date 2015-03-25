@@ -19,6 +19,6 @@ cp actor-framework-snocs/libcaf_io_SNocscript.py actor-framework/libcaf_io/SNocs
 cp actor-framework-snocs/libcaf_opencl_SNocscript.py actor-framework/libcaf_opencl/SNocscript.py
 cp actor-framework-snocs/libcaf_riac_SNocscript.py actor-framework/libcaf_riac/SNocscript.py
 
-./ucl snocs "$1" compiler=gpp_cpp11
+./ucl snocs ${*:1} compiler=gpp_cpp11
 
 cd -
