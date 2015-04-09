@@ -1,7 +1,6 @@
-Disclaimer
+The project is under construction
 ---
 
-Project is under construction
 
 # Ultra-Cloud project
 
