@@ -45,7 +45,7 @@ ucl.yaml standard
 
 1. `name`. First of all every topology and module has a **name**. In `ucl.yaml` we create a `name` field in the notation of the Url path. E.g. `name:"github.com/osblinnikov/Ultra-Cloud/Dispatcher"`. For C it is translated to a struct "com_github_osblinnikov_ultra_cloud_Dispatcher" with constructor function "com_github_osblinnikov_ultra_cloud_Dispatcher_create". For Java the name will be translated into "com.github.osblinnikov.ultra_cloud.Dispatcher".  For C++ the name will be translated into "com::github::osblinnikov::ultra_cloud::Dispatcher". 
 
-Developer should always keep in mind: if the module already used in other projects and there is a need in changing exported messaging interface it is better to create a copy of module with different name e.g Dispatcher2 or ImprovedDispatcher etc. This allows the community members to upgrade and test their apps when they will need or want it. At the same time it allows users to have different versions of the module simultaneously.
+  Developer should always keep in mind: if the module already used in other projects and there is a need in changing exported messaging interface it is better to create a copy of module with different name e.g Dispatcher2 or ImprovedDispatcher etc. This allows the community members to upgrade and test their apps when they will need or want it. At the same time it allows users to have different versions of the module simultaneously.
 
 2. `gen` is a list of URL names of the generators which are going to be used with the topology. e.g
 
@@ -68,7 +68,7 @@ Developer should always keep in mind: if the module already used in other projec
       "emitStructure github.com/osblinnikov/ultra-cloud/generator/exampleType"
     ]
     
-Separator " " separates `name` and `type`. The `name` field keeps an identificator which is unique for this module. The `type` field keeps a name of the structure which is going to be emitted/received. 
+  Separator " " separates `name` and `type`. The `name` field keeps an identificator which is unique for this module. The `type` field keeps a name of the structure which is going to be emitted/received. 
 
   * Keep in mind that every generator for different programming language expects that we specified it in the `depends` field or included it manually in the build automation system.
 
@@ -82,9 +82,9 @@ Separator " " separates `name` and `type`. The `name` field keeps an identificat
   * Before code generation, make sure that all specified dependencies are installed into the workspace. If some dependencies are not installed then generators MUST skip them from inclusion because different build systems can have different dependencies.
 
 
-The behaviour of the `github.com/osblinnikov/ultra-cloud/plugins/snocs` generator is to specify the dependencies in the SNonsfile (wrapper of SCons) pipeline so the compiler can find and build deps before building the module. The specified dependencies must also provide SNocsfile.
-    
-The behaviour of the `github.com/osblinnikov/ultra-cloud/plugins/maven` generator is to write the dependencies into pom.xml file with the hope that this module will be available in the build system.
+  The behaviour of the `github.com/osblinnikov/ultra-cloud/plugins/snocs` generator is to specify the dependencies in the SNonsfile (wrapper of SCons) pipeline so the compiler can find and build deps before building the module. The specified dependencies must also provide SNocsfile.
+      
+  The behaviour of the `github.com/osblinnikov/ultra-cloud/plugins/maven` generator is to write the dependencies into pom.xml file with the hope that this module will be available in the build system.
 
 5. `args` is a list of the strings like this:  
 
@@ -93,7 +93,7 @@ The behaviour of the `github.com/osblinnikov/ultra-cloud/plugins/maven` generato
       "initialStructureArray github.com/osblinnikov/ultra-cloud/generator/exampleType"
     ]
   
-Separator " " separates `name` and `type`. The `name` field keeps an identificator which is unique for this module. The `type` field keeps a name of the structure which is going to be received.
+  Separator " " separates `name` and `type`. The `name` field keeps an identificator which is unique for this module. The `type` field keeps a name of the structure which is going to be received.
   
   * Keep in mind that every generator for different programming language expects that we specified the module of this structure in the `depends` field or included it manually in the build automation system files.
   
@@ -140,9 +140,9 @@ Separator " " separates `name` and `type`. The `name` field keeps an identificat
       "emit":["actor0 location","actor1 spaceCoordinate"]????????????????????? todo: how to send different data types
     }
  
-New types of channels can be created by anyone who need it. For example one would implement a Round-Robin channel, another a channel for the connection to the specified WebSocket server. To use the custom channels in applications the developer needs to register them in the ChannelsFactory.
-
-Channel must follow to the programming guidelines and ChannelInterface of Ultra-Cloud project.
+  New types of channels can be created by anyone who need it. For example one would implement a Round-Robin channel, another a channel for the connection to the specified WebSocket server. To use the custom channels in applications the developer needs to register them in the ChannelsFactory.
+  
+  Channel must follow to the programming guidelines and ChannelInterface of Ultra-Cloud project.
 
 Developement of a new channel module (ChannelInterface)
 ---
