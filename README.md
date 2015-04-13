@@ -58,7 +58,7 @@ ucl.yaml standard
       "github.com/osblinnikov/ultra-cloud/plugins/snocs"
     ]
     
-  * What every developer should remember is that different generators can be incompatible with each other e.g. they can overrite the same directories or files. To check if the generator is compatible with each other you can simply compare their directory structures. E.g. compare `github.com/osblinnikov/ultra-cloud/plugins/c` and `github.com/osblinnikov/ultra-cloud/plugins/java`. Notice that the files will be generated only if they have .tpl counterpart in the generator folder.
+  * Keep in mind that different generators can be incompatible with each other e.g. they can overrite the same directories or files. To check if the generator is compatible with each other you can simply compare their directory structures. E.g. compare `github.com/osblinnikov/ultra-cloud/plugins/c` and `github.com/osblinnikov/ultra-cloud/plugins/java`. Notice that the files will be generated only if they have .tpl counterpart in the generator folder.
     
 
 3. `emit` and `receive` are lists of the strings like this:
