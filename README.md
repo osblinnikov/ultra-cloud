@@ -45,7 +45,7 @@ ucl.yaml standard
 
 1. `name`. First of all every topology and module has a **name**. In `ucl.yaml` we create a `name` field in the notation of the Url path. E.g. `name:"github.com/osblinnikov/Ultra-Cloud/Dispatcher"`. For C it is translated to a struct "com_github_osblinnikov_ultra_cloud_Dispatcher" with constructor function "com_github_osblinnikov_ultra_cloud_Dispatcher_create". For Java the name will be translated into "com.github.osblinnikov.ultra_cloud.Dispatcher".  For C++ the name will be translated into "com::github::osblinnikov::ultra_cloud::Dispatcher". 
 
-  Developer should always keep in mind: if the module already used in other projects and there is a need in changing exported messaging interface it is better to create a copy of module with different name e.g Dispatcher2 or ImprovedDispatcher etc. This allows the community members to upgrade and test their apps when they will need or want it. At the same time it allows users to have different versions of the module simultaneously.
+  * Keep in mind: if the module already used in other projects and there is a need in changing exported messaging interface it is better to create a copy of module with different name e.g Dispatcher2 or ImprovedDispatcher etc. This allows the community members to upgrade and test their apps when they will need or want it. At the same time it allows users to have different versions of the module simultaneously.
 
 2. `gen` is a list of URL names of the generators which are going to be used with the topology. e.g
 
